@@ -11,6 +11,5 @@ Scenario: complete a transaction using iDeal payment
   When I navigate to hostedCheckOut page
   And I use iDeal payment method
   Then the payment is successful
-  And the transaction is completed
 
 #end
