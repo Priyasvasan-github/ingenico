@@ -1,5 +1,7 @@
 package com.ingenico.epayments.helper
 
+import groovy.test.GroovyAssert
+
 import javax.inject.Named
 
 import groovy.json.JsonOutput
@@ -41,11 +43,12 @@ class RestClientFactory {
             def httpRequest = resp.context["http.request"]
             def requestLine = JsonOutput.toJson(httpRequest.requestLine)
             def allHeaders = JsonOutput.toJson(httpRequest.allHeaders)
-            def error = "Unexpected failure: ${resp.statusLine}\nResponse: $reader\nRequest: ${JsonOutput.prettyPrint(requestLine)}\nHeaders: ${JsonOutput.prettyPrint(allHeaders)}";
+            def error = "Unexpected failure: ${resp.statusLine}\nResponse: $reader\nRequest: ${JsonOutput.prettyPrint(requestLine)}\nHeaders: ${JsonOutput.prettyPrint(allHeaders)}"
+            GroovyAssert.fail(error)
         }
 
-        // link text to json type, so it is parsed by the default JSON parser
-        rest.parser.'text/json' = rest.parser.'application/json'
+        // link json to text type, so it is parsed by the default JSON parser
+        rest.parser.'application/json' = rest.parser.'text/plain'
 
         return rest
     }

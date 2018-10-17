@@ -23,7 +23,7 @@ public class PaymentPageActions {
      */
     @Step
     public void launchWebBrowser(){
-        paymentPage.openAt(TestContext.getCreateHostedCheckoutContext().getPartialRedirectUrl());
+        paymentPage.openAt(TestContext.getCreateHostedCheckoutContext().getCheckoutUrl());
     }
 
     /**
@@ -82,6 +82,5 @@ public class PaymentPageActions {
             return null;
         }
     }
-
 
 }

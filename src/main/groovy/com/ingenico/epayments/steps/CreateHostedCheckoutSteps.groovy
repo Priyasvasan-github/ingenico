@@ -3,35 +3,33 @@ package com.ingenico.epayments.steps
 import com.ingenico.epayments.context.EndPointContext
 import com.ingenico.epayments.context.TestContext
 import com.ingenico.epayments.helper.RestClientFactory
-import com.ingenico.epayments.steps.AuthenticationSteps
+import groovy.json.JsonSlurper
+
+import static com.ingenico.epayments.context.TestContext.getCreateHostedCheckoutContext
 
 import groovy.util.logging.Slf4j
-import groovyx.net.http.ContentType
-import groovyx.net.http.HTTPBuilder
-import groovyx.net.http.RESTClient
+
 import net.thucydides.core.annotations.Steps
 
 import javax.inject.Named
-import javax.inject.Inject
-
-import static com.ingenico.epayments.context.TestContext.getCreateHostedCheckoutContext
-import static com.ingenico.epayments.context.TestContext.getCreateHostedCheckoutContext
 
 import static groovyx.net.http.ContentType.JSON
-import static groovyx.net.http.ContentType.TEXT
+import static groovyx.net.http.ContentType.ANY
 
+/**
+ * Steps for interacting with CreateHostedCheckout API to get partialRedirectUrl
+ */
 @Slf4j
 @Named
-public class CreateHostedCheckoutSteps {
+class CreateHostedCheckoutSteps {
 
     @Steps EndPointContext endPointContext = TestContext.getEndPointContext()
     @Steps AuthenticationSteps authenticationSteps
     @Steps RestClientFactory restClientFactory
 
     String httpMethod = "POST"
-    String contentType = "application/json;charset=utf8"
+    String contentType = "application/json;charset=UTF-8"
     String merchantKey =  endPointContext.getMerchantKey()
-
     String uri = "/v1/" + merchantKey + "/hostedcheckouts"
 
     Date date = new Date()
@@ -40,16 +38,18 @@ public class CreateHostedCheckoutSteps {
     String message = httpMethod + "\n" + contentType + "\n" + utcDateTime + "\n" + uri + "\n"
 
     /**
-     * Get the reservation (containing passenger-, connection- and segment details) from the resource store
+     * Post and get the response of CreateHostedCheckout API service
      *
      */
-    def postCreateHostedCheckout() {
+    def getCreateHostedCheckout() {
         def createHostedCheckoutContext = createHostedCheckoutContext
 
+        // Get the HMAC-SHA256 signature
         String signature = authenticationSteps.hmacSha256 (message)
 
         String authorization = 'GCS v1HMAC:' + endPointContext.getApiKey() + ':' + signature
 
+        // Request body
         def body = [
                 'order': [
                         'amountOfMoney': [
@@ -69,23 +69,33 @@ public class CreateHostedCheckoutSteps {
                 ]
         ]
 
+        // Form the POST request
         def request = [
-                uri: endPointContext.getConnectApiBasePath(),
-                path: "/hostedcheckouts",
-                headers: [
-                        "Date": utcDateTime,
-                        "Authorization": authorization,
-                ],
-                contentType: contentType,
+                uri: endPointContext.getConnectApiBasePath() + "/hostedcheckouts",
+                body: body,
                 requestContentType: JSON,
-                body: body
+                contentType: JSON,
+                headers: [
+                        'Date': utcDateTime,
+                        'Authorization': authorization,
+                        'Content-Type': contentType
+                ]
         ]
 
-        restClientFactory.get().post(request) { resp, reader ->
-            def response = reader
+        // Call the RESTClient and extract the partialRedirectUrl
+        restClientFactory.get().post(request){ resp, reader ->
+            assert resp.statusLine.statusCode == 201 : "CreateHostedCheckOut API response does not have HTTP response status 201!"
 
-            String partialRedirectUrl = response.partialRedirectUrl
-            System.out.println(partialRedirectUrl)
+            // Parse response to JSON
+            def jsonResponse = new JsonSlurper().parseText(reader.text)
+            assert jsonResponse.partialRedirectUrl : "No partialRedirectUrl in api response"
+
+            // Extract the partialRedirect URL
+            String partialRedirectUrl = jsonResponse.partialRedirectUrl
+
+            // Concatenate the checkout URL
+            createHostedCheckoutContext.checkoutUrl = "https://payment." + partialRedirectUrl
         }
     }
+
 }

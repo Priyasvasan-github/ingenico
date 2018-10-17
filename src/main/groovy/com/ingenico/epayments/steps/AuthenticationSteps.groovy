@@ -1,17 +1,15 @@
 package com.ingenico.epayments.steps
 
 import com.ingenico.epayments.context.TestContext
-import net.thucydides.core.annotations.Steps
 
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-import javax.inject.Inject
 import java.security.InvalidKeyException
 
 import groovy.util.logging.Slf4j
 
 /**
- * Authenticate the API calls
+ * Form signature using HMAC-SHA256 algorithm to authenticate the API calls
  */
 @Slf4j
 public class AuthenticationSteps {

@@ -10,5 +10,5 @@ import org.junit.runner.RunWith;
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(features = "src/test/resources/features/", glue = "com.ingenico.epayments.glue")
 
-public class ApiAutomationIT {
+public class TestAutomationIT {
 }

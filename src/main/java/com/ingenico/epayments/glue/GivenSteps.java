@@ -9,7 +9,6 @@ import net.thucydides.core.annotations.Steps;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
@@ -22,7 +21,7 @@ public class GivenSteps {
     @Steps CreateHostedCheckoutSteps createHostedCheckoutSteps;
 
     /**
-     * Use the GET orders API to retrieve the root resource of the Order API.
+     * Initiate the test context using the user input
      */
     @Given("^I create a transaction using CreateHostedCheckout API as$")
     public void SetCreateHostedCheckoutContext(DataTable dataTable) {
@@ -35,10 +34,11 @@ public class GivenSteps {
     }
 
     /**
-     * Use the GET orders API to retrieve the root resource of the Order API.
+     * Extract the partialRedirectUrl from createHostedCheckout API response
      */
     @Given("^I have partialRedirectUrl from API response$")
     public void GetPartialRedirectUrl () {
-        createHostedCheckoutSteps.postCreateHostedCheckout();
+        createHostedCheckoutSteps.getCreateHostedCheckout();
     }
+
 }
