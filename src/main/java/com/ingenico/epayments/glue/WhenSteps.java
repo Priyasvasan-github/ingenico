@@ -18,19 +18,19 @@ public class WhenSteps {
     /**
      * Navigate to the hosted checkout page using web driver
      */
-    @When("I navigate to hostedCheckOut page")
+    @When("^I navigate to hostedCheckOut page$")
     public void navigateToHostedUrl () {
         paymentPageSteps.launchWebBrowser();
-        paymentPageSteps.isPaymentPageLoaded();
+        paymentPageSteps.checkPaymentPageLoaded();
     }
 
     /**
      * Make payment using iDeal payment method
      */
-    @When("I use iDeal payment method")
-    public void payWithIdeal () {
-        paymentPageSteps.selectIdealPaymentOption();
-        paymentPageSteps.selectRABOBankOption();
+    @When("^I use (.*) payment method$")
+    public void payWithIdeal (String paymentMethod) {
+        paymentPageSteps.selectPaymentOption(paymentMethod);
+        paymentPageSteps.selectIssuer();
         paymentPageSteps.confirmPayment();
     }
 

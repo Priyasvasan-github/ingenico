@@ -10,12 +10,12 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Created by x000810 on 10/16/2018.
+ * The PaymentPageActions class implements steps to use a browser to redirect to Ingenico hosted checkout page
  */
 public class PaymentPageActions {
 
     private PaymentPage paymentPage;
-    Properties prop = new Properties();
+    Properties properties = new Properties();
     InputStream input = null;
 
     /**
@@ -27,11 +27,11 @@ public class PaymentPageActions {
     }
 
     /**
-     * This method returns if Payment page is loaded or not
-     * @return
+     * This method returns if payment page is loaded or not
+     * @return the paymentPage
      */
     @Step
-    public boolean isPaymentPageLoaded(){
+    public boolean checkPaymentPageLoaded(){
        return paymentPage.isPaymentPageHeaderLoaded();
     }
 
@@ -39,15 +39,17 @@ public class PaymentPageActions {
      * This method select iDEAL as payment option from 20 options
      */
     @Step
-    public void selectIdealPaymentOption(){
-        paymentPage.clickIdealPaymentOption();
+    public void selectPaymentOption(String paymentMethod){
+        if (paymentMethod.equals("iDeal")) {
+            paymentPage.clickIdealPaymentOption();
+        }
     }
 
     /**
      * This method selects RABO bank as payment option
      */
     @Step
-    public void selectRABOBankOption(){
+    public void selectIssuer(){
         paymentPage.selectValue(getPropValue("paymentBankValue"));
         paymentPage.clickPayButton();
     }
@@ -62,7 +64,7 @@ public class PaymentPageActions {
 
     /**
      * This method returns payment staus message
-     * @return
+     * @return the paymentPage
      */
     @Step
     public String getPaymentStatusMessage(){
@@ -71,13 +73,13 @@ public class PaymentPageActions {
     /**
      * This method returns the input values provided in config value
      * @param propName
-     * @return
+     * @return the properties
      */
     public String getPropValue(String propName){
         try{
             input = new FileInputStream("src/main/resources/config.properties");
-            prop.load(input);
-            return prop.getProperty(propName);
+            properties.load(input);
+            return properties.getProperty(propName);
         }catch (IOException exception){
             return null;
         }

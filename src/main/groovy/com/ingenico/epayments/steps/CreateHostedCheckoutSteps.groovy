@@ -3,18 +3,18 @@ package com.ingenico.epayments.steps
 import com.ingenico.epayments.context.EndPointContext
 import com.ingenico.epayments.context.TestContext
 import com.ingenico.epayments.helper.RestClientFactory
-import groovy.json.JsonSlurper
-
 import static com.ingenico.epayments.context.TestContext.getCreateHostedCheckoutContext
 
-import groovy.util.logging.Slf4j
+import groovy.json.JsonSlurper
 
+import net.thucydides.core.annotations.Step
 import net.thucydides.core.annotations.Steps
+
+import groovy.util.logging.Slf4j
 
 import javax.inject.Named
 
 import static groovyx.net.http.ContentType.JSON
-import static groovyx.net.http.ContentType.ANY
 
 /**
  * Steps for interacting with CreateHostedCheckout API to get partialRedirectUrl
@@ -30,18 +30,21 @@ class CreateHostedCheckoutSteps {
     String httpMethod = "POST"
     String contentType = "application/json;charset=UTF-8"
     String merchantKey =  endPointContext.getMerchantKey()
+    String customHeaderOne = "x-gcs-messageid:6480071e-039d-4dca-a966-4ce3c1bc201b"
+    String customHeaderTwo = "x-gcs-requestid:1cc6daff-a305-4d7b-94b0-c580fd5ba6b4"
     String uri = "/v1/" + merchantKey + "/hostedcheckouts"
 
     Date date = new Date()
     String utcDateTime = date.format('EEE, dd MMM yyyy HH:mm:ss z', TimeZone.getTimeZone('GMT'))
 
-    String message = httpMethod + "\n" + contentType + "\n" + utcDateTime + "\n" + uri + "\n"
+    String message = httpMethod + "\n" + contentType + "\n" + utcDateTime + "\n" + customHeaderOne + "\n" + customHeaderTwo + "\n" + uri + "\n"
 
     /**
      * Post and get the response of CreateHostedCheckout API service
      *
      */
-    def getCreateHostedCheckout() {
+    @Step
+    def postCreateHostedCheckout() {
         def createHostedCheckoutContext = createHostedCheckoutContext
 
         // Get the HMAC-SHA256 signature
@@ -78,7 +81,9 @@ class CreateHostedCheckoutSteps {
                 headers: [
                         'Date': utcDateTime,
                         'Authorization': authorization,
-                        'Content-Type': contentType
+                        'Content-Type': contentType,
+                        'X-GCS-MessageId': "6480071e-039d-4dca-a966-4ce3c1bc201b",
+                        'X-GCS-RequestId': "1cc6daff-a305-4d7b-94b0-c580fd5ba6b4"
                 ]
         ]
 

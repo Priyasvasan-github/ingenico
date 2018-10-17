@@ -10,6 +10,7 @@ import groovy.util.logging.Slf4j
 
 /**
  * Form signature using HMAC-SHA256 algorithm to authenticate the API calls
+ * @return the encodedData
  */
 @Slf4j
 public class AuthenticationSteps {

@@ -6,7 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
 
 /**
- * Created by Sripriya Srinivasan on 10/16/2018.
+ * The PageObject class holds the web elements
  */
 public class PaymentPage extends PageObject {
 
@@ -29,7 +29,7 @@ public class PaymentPage extends PageObject {
     @FindBy(css="#paymentoptionswrapper p")
     WebElement paymentStatus;
 
-    /*
+    /**
     * This method selects Value From Dropdown
     */
     public void selectValue(String bankName){
@@ -39,7 +39,8 @@ public class PaymentPage extends PageObject {
     }
 
     /**
-     * This method return is paymentPageHeader is Laoded
+     * This method return is paymentPageHeader is loaded
+     * @return the paymentPageHeader
      */
     public boolean isPaymentPageHeaderLoaded(){
         return paymentPageHeader.isDisplayed();
@@ -69,7 +70,7 @@ public class PaymentPage extends PageObject {
 
     /**
      * This method return the payment status message
-     * @return
+     * @return the paymentStatus
      */
     public String getStatusMessage(){
         return paymentStatus.getText();

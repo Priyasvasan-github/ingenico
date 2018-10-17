@@ -38,7 +38,7 @@ public class GivenSteps {
      */
     @Given("^I have partialRedirectUrl from API response$")
     public void GetPartialRedirectUrl () {
-        createHostedCheckoutSteps.getCreateHostedCheckout();
+        createHostedCheckoutSteps.postCreateHostedCheckout();
     }
 
 }

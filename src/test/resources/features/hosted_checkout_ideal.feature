@@ -1,4 +1,4 @@
-@hosted_checkout @ideal @test
+@hosted_checkout @ideal
 Feature: hosted_checkout_ideal
   As a merchant, I want to be able to retrieve the partial redirect url from the CreateHostedCheckout API
   and make payment in the hosted checkout web page using iDeal payment method, so I can complete my payment transactions.

@@ -119,7 +119,7 @@
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
                     <includes>
-                        <include>**/ApiAutomationIT.java</include>
+                        <include>**/*IT.java</include>
                     </includes>
                 </configuration>
                 <executions>

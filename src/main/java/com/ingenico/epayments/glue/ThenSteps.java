@@ -20,7 +20,7 @@ public class ThenSteps {
     /**
      * Verify if the transaction is successfully completed
      */
-    @Then("the payment is successful")
+    @Then("^the payment is successful$")
     public void verifyPaymentIsSuccessful () {
         assertThat(paymentPageSteps.getPaymentStatusMessage()).isEqualToIgnoringCase("Your payment is successful.");
     }
